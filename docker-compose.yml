@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  ml-service:
+    image: python:3.10-slim
+    working_dir: /app/ml-service
+    volumes:
+      - .:/app
+    environment:
+      - MODELS_DIR=/app/ml-pipeline/models
+      - RESULTS_DIR=/app/ml-pipeline/results
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000"
+
+  server:
+    image: node:20-alpine
+    working_dir: /app/server
+    volumes:
+      - .:/app
+    environment:
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongodb:27017/smartdc-energy
+      - ML_SERVICE_URL=http://ml-service:8000
+      - CORS_ORIGIN=http://localhost:5173
+    ports:
+      - "4000:4000"
+    command: sh -c "npm install && npm run dev"
+    depends_on:
+      - mongodb
+      - ml-service
+
+  client:
+    image: node:20-alpine
+    working_dir: /app/client
+    volumes:
+      - .:/app
+    environment:
+      - VITE_API_URL=http://localhost:4000
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:

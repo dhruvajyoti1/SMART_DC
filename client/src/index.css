@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── SmartDC Control System — Dark-Only Theme ──────────────────────────── */
+:root {
+  --color-bg:          #0a1628;
+  --color-surface:     #111d32;
+  --color-surface-2:   #0d1a2d;
+  --color-surface-3:   #162340;
+  --color-border:      #1a2d47;
+  --color-border-light:#243b5c;
+  --color-text:        #e2e8f0;
+  --color-text-muted:  #7a8ca5;
+  --color-accent:      6 182 212;      /* cyan-500 RGB for Tailwind */
+  --color-accent-hex:  #06b6d4;
+  --color-success:     #10b981;
+  --color-danger:      #ef4444;
+  --color-warning:     #f59e0b;
+  --color-info:        #3b82f6;
+  --sidebar-width:     64px;
+  --sidebar-expanded:  240px;
+  --topbar-height:     48px;
+}
+
+/* ─── Base styles ───────────────────────────────────────────────────────── */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* ─── Surface & text utilities ──────────────────────────────────────────── */
+.surface {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.surface-2 {
+  background-color: var(--color-surface-2);
+}
+
+.surface-3 {
+  background-color: var(--color-surface-3);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+/* ─── Control-panel card ────────────────────────────────────────────────── */
+.control-panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  position: relative;
+}
+
+.control-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-accent-hex), transparent);
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* ─── Glow effects ──────────────────────────────────────────────────────── */
+.glow-cyan  { box-shadow: 0 0 20px rgba(6, 182, 212, 0.15); }
+.glow-green { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+.glow-red   { box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+.glow-blue  { box-shadow: 0 0 20px rgba(59, 130, 246, 0.15); }
+
+.glow-text-cyan  { text-shadow: 0 0 12px rgba(6, 182, 212, 0.5); }
+.glow-text-green { text-shadow: 0 0 12px rgba(16, 185, 129, 0.5); }
+.glow-text-red   { text-shadow: 0 0 12px rgba(239, 68, 68, 0.5); }
+
+/* ─── Status indicator dots ─────────────────────────────────────────────── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot-online  { background: var(--color-success); box-shadow: 0 0 8px var(--color-success); }
+.status-dot-warning { background: var(--color-warning); box-shadow: 0 0 8px var(--color-warning); }
+.status-dot-offline { background: var(--color-danger);  box-shadow: 0 0 8px var(--color-danger);  }
+
+/* ─── Grid-pattern background (login page) ──────────────────────────────── */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ─── Scan-line overlay ─────────────────────────────────────────────────── */
+.scanline::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(6, 182, 212, 0.012) 2px,
+    rgba(6, 182, 212, 0.012) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Recharts fix: prevent ResponsiveContainer from collapsing ─────────── */
+.recharts-wrapper {
+  display: block !important;
+}
+
+/* ─── Scrollbar styling ─────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ─── Custom animations ─────────────────────────────────────────────────── */
+@keyframes glow-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+@keyframes slide-in-left {
+  from { transform: translateX(-8px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-glow-pulse  { animation: glow-pulse 2s ease-in-out infinite; }
+.animate-slide-in    { animation: slide-in-left 0.2s ease-out; }
+.animate-fade-in     { animation: fade-in 0.3s ease-out; }
