@@ -4,26 +4,37 @@ const AuthContext = createContext(null);
 
 const STORAGE_KEY = 'smartdc_scada_session';
 
+function readStoredSession() {
+  try {
+    const local = localStorage.getItem(STORAGE_KEY);
+    if (local) return JSON.parse(local);
+    const session = sessionStorage.getItem(STORAGE_KEY);
+    if (session) return JSON.parse(session);
+  } catch { /* corrupted storage */ }
+  return null;
+}
+
 export function AuthProvider({ children }) {
-  const [operator, setOperator] = useState(() => {
-    try {
-      const saved = sessionStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [operator, setOperator] = useState(() => readStoredSession());
 
   const login = (operatorData) => {
+    const persist = operatorData.persist ?? false;
+    const { persist: _, ...rest } = operatorData;
     const session = {
-      ...operatorData,
+      ...rest,
       loginTimestamp: new Date().toISOString(),
       workstationId: 'WS-DISPATCH-01',
     };
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+      if (persist) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+        sessionStorage.removeItem(STORAGE_KEY);
+      } else {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+        localStorage.removeItem(STORAGE_KEY);
+      }
     } catch (e) {
-      console.error('Failed to persist session to sessionStorage', e);
+      console.error('Failed to persist session', e);
     }
     setOperator(session);
   };
@@ -31,8 +42,9 @@ export function AuthProvider({ children }) {
   const logout = () => {
     try {
       sessionStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY);
     } catch (e) {
-      console.error('Failed to clear sessionStorage', e);
+      console.error('Failed to clear storage', e);
     }
     setOperator(null);
   };

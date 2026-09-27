@@ -7,6 +7,12 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   ml-service:
     image: python:3.10-slim
@@ -20,6 +26,12 @@ services:
       - "8000:8000"
     command: >
       bash -c "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   server:
     image: node:20-alpine
@@ -35,8 +47,16 @@ services:
       - "4000:4000"
     command: sh -c "npm install && npm run dev"
     depends_on:
-      - mongodb
-      - ml-service
+      mongodb:
+        condition: service_healthy
+      ml-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/').then(r => r.ok ? process.exit(0) : process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   client:
     image: node:20-alpine
@@ -49,7 +69,8 @@ services:
       - "5173:5173"
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     depends_on:
-      - server
+      server:
+        condition: service_healthy
 
 volumes:
   mongodb_data:

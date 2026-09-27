@@ -26,7 +26,7 @@ export default function AnomalyBadge({ status, large = false }) {
     label = 'CRITICAL TRIP';
   } else if (isWarning) {
     colour = 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-[0_0_8px_rgba(245,158,11,0.25)]';
-    dot = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+    dot = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
     label = 'WARNING';
   } else if (normalized && normalized !== 'NORMAL' && normalized !== 'NOMINAL') {
     label = normalized;

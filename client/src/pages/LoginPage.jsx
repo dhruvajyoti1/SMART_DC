@@ -42,7 +42,7 @@ export default function LoginPage() {
     }
     setError('');
 
-    // Grant SCADA Session
+    // Grant SCADA Session — pass persist flag so AuthContext uses the right storage
     login({
       email: email.trim(),
       operatorId: operatorId.trim() || 'ENG-GUEST',
@@ -50,6 +50,7 @@ export default function LoginPage() {
       accessLevel,
       controlModule,
       shiftAssignment,
+      persist: remember,
     });
 
     navigate('/', { replace: true });

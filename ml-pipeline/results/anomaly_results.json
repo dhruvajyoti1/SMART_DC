@@ -1,0 +1,32 @@
+{
+  "metrics": [
+    {
+      "Model": "Isolation Forest",
+      "Precision": 0.1559,
+      "Recall": 0.1742,
+      "F1": 0.1646,
+      "Train_Time_s": 0.42,
+      "Accuracy": 0.82
+    },
+    {
+      "Model": "Random Forest",
+      "Precision": 0.9962,
+      "Recall": 0.9924,
+      "F1": 0.9943,
+      "Train_Time_s": 0.62,
+      "Accuracy": 0.9994292237442922
+    }
+  ],
+  "roc_auc": {
+    "IsolationForest": 0.7207145068473193,
+    "RandomForest": 0.9999962060508936
+  },
+  "naive_baseline_accuracy": 0.9497716894977168,
+  "best_model": "Random Forest",
+  "confusion_matrix": {
+    "TP": 262,
+    "FP": 1,
+    "FN": 2,
+    "TN": 4991
+  }
+}

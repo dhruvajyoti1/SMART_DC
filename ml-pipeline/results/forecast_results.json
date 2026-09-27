@@ -1,0 +1,136 @@
+{
+  "best_model": "XGBoost",
+  "metrics": [
+    {
+      "Model": "XGBoost",
+      "MAE": 130.90557351129692,
+      "RMSE": 164.198841462911,
+      "R2": 0.8944962148793077,
+      "MAPE_%": 1.3737177806103906,
+      "Train_Time_s": 2.06,
+      "CV_RMSE": 1.73
+    },
+    {
+      "Model": "LightGBM",
+      "MAE": 132.21674520454596,
+      "RMSE": 164.95132497182666,
+      "R2": 0.8935270025515469,
+      "MAPE_%": 1.3874625163828147,
+      "Train_Time_s": 0.81,
+      "CV_RMSE": 1.73
+    },
+    {
+      "Model": "LSTM",
+      "MAE": 167.48456886719754,
+      "RMSE": 209.25709014870037,
+      "R2": 0.8286335493621796,
+      "MAPE_%": 1.7548724328736998,
+      "Train_Time_s": 97.44,
+      "CV_RMSE": 2.2
+    }
+  ],
+  "train_test_gap": 0.06381413607385933,
+  "extreme_weather_mae_ratio": 1.0692743260618858,
+  "feature_importance": [
+    {
+      "feature": "lag_1h",
+      "importance": 0.5936
+    },
+    {
+      "feature": "lag_168h",
+      "importance": 0.1742
+    },
+    {
+      "feature": "lag_24h",
+      "importance": 0.0456
+    },
+    {
+      "feature": "hour_cos",
+      "importance": 0.0407
+    },
+    {
+      "feature": "hour_sin",
+      "importance": 0.0296
+    },
+    {
+      "feature": "hour",
+      "importance": 0.0204
+    },
+    {
+      "feature": "roll_mean_24h",
+      "importance": 0.0158
+    },
+    {
+      "feature": "day_of_week",
+      "importance": 0.0145
+    },
+    {
+      "feature": "lag_48h",
+      "importance": 0.0104
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 0.0086
+    },
+    {
+      "feature": "roll_mean_6h",
+      "importance": 0.0065
+    },
+    {
+      "feature": "midnight_energy_kwh",
+      "importance": 0.0051
+    },
+    {
+      "feature": "weekend_energy_kwh",
+      "importance": 0.0034
+    },
+    {
+      "feature": "under_floor_pressure_pa",
+      "importance": 0.0033
+    },
+    {
+      "feature": "lag_12h",
+      "importance": 0.0031
+    },
+    {
+      "feature": "month_cos",
+      "importance": 0.0029
+    },
+    {
+      "feature": "roll_std_6h",
+      "importance": 0.0029
+    },
+    {
+      "feature": "month",
+      "importance": 0.0028
+    },
+    {
+      "feature": "lag_6h",
+      "importance": 0.0027
+    },
+    {
+      "feature": "roll_std_24h",
+      "importance": 0.0027
+    },
+    {
+      "feature": "month_sin",
+      "importance": 0.0026
+    },
+    {
+      "feature": "chilled_water_temp_c",
+      "importance": 0.0024
+    },
+    {
+      "feature": "server_inlet_temp_c",
+      "importance": 0.0024
+    },
+    {
+      "feature": "relative_humidity_pct",
+      "importance": 0.0021
+    },
+    {
+      "feature": "ambient_temp_c",
+      "importance": 0.0018
+    }
+  ]
+}

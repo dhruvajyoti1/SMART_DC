@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { TelemetryProvider } from './context/TelemetryContext.jsx';
@@ -50,10 +49,6 @@ function ProtectedLayout() {
 }
 
 export default function App() {
-  useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
-
   return (
     <AuthProvider>
       <BrowserRouter>

@@ -215,6 +215,20 @@ export default function WhatIfPage() {
         Object.entries(anomalyFields).map(([k, v]) => [k, Number(v)])
       );
 
+      // Auto-compute cyclic features from hour and month
+      const h = Number(forecastFeatures.hour);
+      const m = Number(forecastFeatures.month);
+      forecastFeatures.hour_sin = Math.sin((2 * Math.PI * h) / 24);
+      forecastFeatures.hour_cos = Math.cos((2 * Math.PI * h) / 24);
+      forecastFeatures.month_sin = Math.sin((2 * Math.PI * m) / 12);
+      forecastFeatures.month_cos = Math.cos((2 * Math.PI * m) / 12);
+      // Also sync anomaly cyclic features
+      anomalyFeatures.hour_sin = forecastFeatures.hour_sin;
+      anomalyFeatures.hour_cos = forecastFeatures.hour_cos;
+      anomalyFeatures.month_sin = forecastFeatures.month_sin;
+      anomalyFeatures.month_cos = forecastFeatures.month_cos;
+      anomalyFeatures.is_weekend = forecastFeatures.is_weekend;
+
       const { data } = await apiClient.post('/analysis/combined', {
         forecastFeatures,
         anomalyFeatures,
@@ -484,14 +498,14 @@ export default function WhatIfPage() {
               <div className="border-t border-[#14263f] pt-3">
                 <div className="flex justify-between items-center text-xs font-mono mb-1.5">
                   <span className="text-slate-400">Anomaly Trip Risk:</span>
-                  <span className={`font-bold ${result.anomaly_probability > 0.5 ? 'text-red-400' : 'text-emerald-400'}`}>
+                  <span className={`font-bold ${result.anomaly_probability >= 0.45 ? 'text-red-400' : result.anomaly_probability >= 0.18 ? 'text-amber-400' : 'text-emerald-400'}`}>
                     {(result.anomaly_probability * 100).toFixed(1)}%
                   </span>
                 </div>
                 <div className="w-full h-2.5 bg-[#0b162a] rounded-full overflow-hidden border border-[#162744]">
                   <div
                     className={`h-full transition-all duration-500 ${
-                      result.anomaly_probability > 0.5 ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : 'bg-emerald-500'
+                      result.anomaly_probability >= 0.45 ? 'bg-red-500 shadow-[0_0_8px_#ef4444]' : result.anomaly_probability >= 0.18 ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b]' : 'bg-emerald-500'
                     }`}
                     style={{ width: `${Math.min(100, result.anomaly_probability * 100)}%` }}
                   />

@@ -22,8 +22,6 @@ import {
   CheckCircleIcon
 } from '../components/Icons.jsx';
 
-const POLL_INTERVAL_MS = 3000;
-const TICK_BUFFER_SIZE = 50;
 const BASELINE_TARGET_KWH = 9707.71; // Iowa Hyperscale baseline anchor
 
 /* ─── SCADA Alarm Severity Classifier ───────────────────────────────────── */
@@ -504,7 +502,7 @@ export default function LivePage() {
             <span className="text-3xl font-black font-mono tracking-tight text-slate-100">
               {ticks.length}
             </span>
-            <span className="text-xs font-mono text-slate-400 font-bold">/ {TICK_BUFFER_SIZE} FRAMES</span>
+            <span className="text-xs font-mono text-slate-400 font-bold">/ 50 FRAMES</span>
           </div>
           <div className="mt-1 flex items-center justify-between text-[11px] font-mono text-slate-400 border-t border-[#13243d] pt-2">
             <span>Telemetry Cursor:</span>
@@ -768,18 +766,18 @@ export default function LivePage() {
                       />
                       <Tooltip content={<PowerTooltip />} />
                       <ReferenceLine
-                        y={10000}
+                        y={9950}
                         stroke="#f59e0b"
                         strokeDasharray="4 4"
                         strokeWidth={1.5}
-                        label={{ value: 'WARNING 10,000 kW', fill: '#f59e0b', fontSize: 9, position: 'insideTopRight' }}
+                        label={{ value: 'WARNING 9,950 kW', fill: '#f59e0b', fontSize: 9, position: 'insideTopRight' }}
                       />
                       <ReferenceLine
-                        y={10500}
+                        y={10450}
                         stroke="#ef4444"
                         strokeDasharray="3 3"
                         strokeWidth={1.5}
-                        label={{ value: 'CRITICAL TRIP 10,500 kW', fill: '#ef4444', fontSize: 9, position: 'insideTopRight' }}
+                        label={{ value: 'CRITICAL TRIP 10,450 kW', fill: '#ef4444', fontSize: 9, position: 'insideTopRight' }}
                       />
                       <Area
                         type="monotone"
@@ -827,13 +825,14 @@ export default function LivePage() {
                       />
                       <Tooltip content={<DeltaTooltip />} />
                       <ReferenceLine y={0} stroke="#475569" strokeWidth={1} />
-                      <ReferenceLine y={292} stroke="#f59e0b" strokeDasharray="3 3" label={{ value: '+292 kW (Warning)', fill: '#f59e0b', fontSize: 9 }} />
+                      <ReferenceLine y={242} stroke="#f59e0b" strokeDasharray="3 3" label={{ value: '+242 kW (Warning)', fill: '#f59e0b', fontSize: 9 }} />
+                      <ReferenceLine y={742} stroke="#ef4444" strokeDasharray="3 3" label={{ value: '+742 kW (Critical)', fill: '#ef4444', fontSize: 9 }} />
                       <Bar dataKey="delta" radius={[2, 2, 0, 0]}>
                         {ticks.map((entry, index) => {
                           const delta = entry.delta;
                           let fill = '#10b981';
-                          if (delta >= 400) fill = '#ef4444';
-                          else if (delta >= 150) fill = '#f59e0b';
+                          if (delta >= 742) fill = '#ef4444';
+                          else if (delta >= 242) fill = '#f59e0b';
                           else if (delta > 0) fill = '#06b6d4';
                           return <Cell key={`cell-${index}`} fill={fill} />;
                         })}

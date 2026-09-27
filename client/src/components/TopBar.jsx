@@ -56,7 +56,7 @@ export default function TopBar() {
             <h1 className="text-sm font-bold text-slate-100 tracking-wide truncate">
               {meta.title}
             </h1>
-            <span className="hidden lg:inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+            <span className="hidden lg:inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 bg-emerald-950/50 border border-emerald-500/30 px-1.5 py-0.5 rounded">
               <span className={`w-1.5 h-1.5 rounded-full ${isRunning ? 'bg-emerald-400 animate-pulse' : 'bg-slate-400'}`} />
               {isRunning ? 'SCADA STREAMING' : 'STREAM PAUSED'}
             </span>

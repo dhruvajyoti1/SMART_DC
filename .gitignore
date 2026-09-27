@@ -64,15 +64,16 @@ __pycache__/
 
 # ============================================================
 # ML Pipeline Generated Artifacts
-# Keep source datasets and notebooks tracked
+# Keep source datasets, notebooks, and result JSONs tracked.
+# Binary model artifacts (large) are excluded — re-generate
+# by running notebooks 01-08 before starting the ML service.
 # ============================================================
-ml-pipeline/models/
-ml-pipeline/results/
-ml-pipeline/**/*.h5
-ml-pipeline/**/*.keras
-ml-pipeline/**/*.pkl
-ml-pipeline/**/*.joblib
-ml-pipeline/**/*.weights
+ml-pipeline/models/*.pkl
+ml-pipeline/models/*.h5
+ml-pipeline/models/*.keras
+ml-pipeline/models/*.joblib
+ml-pipeline/models/*.weights
+ml-pipeline/data/raw/
 
 # ============================================================
 # Docker / Local Runtime Data

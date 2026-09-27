@@ -263,12 +263,13 @@ export default function AnalyticsPage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono">
-          <StatCard label="Accuracy" value={(aMetrics.Accuracy || aMetrics.accuracy || anomaly.naive_baseline_accuracy) !== undefined ? ((aMetrics.Accuracy || aMetrics.accuracy || anomaly.naive_baseline_accuracy) * 100).toFixed(2) : undefined} unit="%" colour="text-cyan-400" sub="Overall correct states" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 font-mono">
+          <StatCard label="RF Accuracy" value={(aMetrics.Accuracy || aMetrics.accuracy) !== undefined ? ((aMetrics.Accuracy || aMetrics.accuracy) * 100).toFixed(2) : undefined} unit="%" colour="text-emerald-400" sub="Overall correct states" />
           <StatCard label="Precision" value={(aMetrics.Precision || aMetrics.precision) !== undefined ? ((aMetrics.Precision || aMetrics.precision) * 100).toFixed(2) : undefined} unit="%" sub="False alarm resistance" />
           <StatCard label="Recall" value={(aMetrics.Recall || aMetrics.recall) !== undefined ? ((aMetrics.Recall || aMetrics.recall) * 100).toFixed(2) : undefined} unit="%" sub="Failure capture rate" />
           <StatCard label="F1-Score" value={(aMetrics.F1 || aMetrics.f1) !== undefined ? ((aMetrics.F1 || aMetrics.f1) * 100).toFixed(2) : undefined} unit="%" colour={(aMetrics.F1 || aMetrics.f1) >= 0.9 ? 'text-emerald-400' : 'text-cyan-400'} sub="Harmonic balance" />
-          <StatCard label="AUC-ROC Score" value={anomaly.roc_auc?.[bestAModel.replace(' ', '')] || anomaly.auc_roc} sub="Separation capacity" />
+          <StatCard label="AUC-ROC Score" value={anomaly.roc_auc?.[bestAModel.replace(/\s+/g, '')] || anomaly.auc_roc} sub="Separation capacity" />
+          <StatCard label="Naive Baseline Acc." value={anomaly.naive_baseline_accuracy !== undefined ? (anomaly.naive_baseline_accuracy * 100).toFixed(2) : undefined} unit="%" sub="Majority-class reference" colour="text-slate-400" />
         </div>
 
         {/* Confusion Matrix Card */}

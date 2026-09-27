@@ -6,7 +6,6 @@ flagged in the Phase A plan.
 """
 import os
 import joblib
-from tensorflow.keras.models import load_model
 
 MODELS_DIR = os.environ.get("MODELS_DIR", "../ml-pipeline/models")
 

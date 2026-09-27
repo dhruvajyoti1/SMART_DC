@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { useTelemetry } from '../context/TelemetryContext.jsx';
 import {
   ActivityIcon,
   BarChartIcon,
@@ -26,6 +27,7 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(false);
   const { operator, logout } = useAuth();
+  const { isRunning } = useTelemetry();
 
   const linkClass = (isActive) =>
     [
@@ -54,7 +56,7 @@ export default function Sidebar() {
           <div className="overflow-hidden whitespace-nowrap animate-slide-in">
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-black tracking-wider text-slate-100 uppercase">SmartDC</span>
-              <span className="text-[9px] px-1 py-0.2 bg-cyan-500/20 text-cyan-400 rounded font-mono font-bold">EMS</span>
+              <span className="text-[9px] px-1 py-0.5 bg-cyan-500/20 text-cyan-400 rounded font-mono font-bold">EMS</span>
             </div>
             <p className="text-[10px] text-slate-500 font-mono tracking-tight">DCS-SCADA v2.4.1</p>
           </div>
@@ -122,9 +124,9 @@ export default function Sidebar() {
         </button>
 
         {/* Loop Status indicator */}
-        <div className="flex items-center gap-2.5 px-4 py-1.5 mx-2 text-[10px] font-mono text-emerald-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0 shadow-[0_0_8px_#10b981]" />
-          {expanded && <span>SCADA Loop Active</span>}
+        <div className={`flex items-center gap-2.5 px-4 py-1.5 mx-2 text-[10px] font-mono ${isRunning ? 'text-emerald-400' : 'text-slate-500'}`}>
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${isRunning ? 'bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]' : 'bg-slate-600'}`} />
+          {expanded && <span>{isRunning ? 'SCADA Loop Active' : 'Loop Paused'}</span>}
         </div>
       </div>
     </aside>
