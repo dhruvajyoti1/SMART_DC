@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTelemetry } from '../context/TelemetryContext.jsx';
-import { ZapIcon, GaugeIcon, ActivityIcon } from './Icons.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
+import { ZapIcon, GaugeIcon, ActivityIcon, ShieldLockIcon } from './Icons.jsx';
 import AnomalyBadge from './AnomalyBadge.jsx';
 
 /**
@@ -22,8 +23,9 @@ export default function TopBar() {
   const location = useLocation();
   const [now, setNow] = useState(new Date());
 
-  // Access continuous background telemetry
+  // Access continuous background telemetry and operator credentials
   const { latestTick, isRunning } = useTelemetry();
+  const { operator, logout } = useAuth();
 
   // Precision chronometer tick
   useEffect(() => {
@@ -109,6 +111,18 @@ export default function TopBar() {
             </div>
           </div>
         </div>
+
+        {/* Lock Workstation / Disconnect Operator */}
+        <div className="w-px h-6 bg-[#162744] hidden sm:block" />
+
+        <button
+          onClick={logout}
+          title="Lock Workstation & Return to SCADA Access Portal"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0e1c31] hover:bg-red-500/15 border border-[#1d3353] hover:border-red-500/30 text-slate-300 hover:text-red-300 text-[11px] font-mono transition-all group"
+        >
+          <ShieldLockIcon className="w-3.5 h-3.5 text-cyan-400 group-hover:text-red-400 transition-colors" />
+          <span className="hidden md:inline font-semibold">Lock Station</span>
+        </button>
       </div>
     </header>
   );

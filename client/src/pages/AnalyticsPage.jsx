@@ -6,6 +6,7 @@ import {
 import apiClient from '../api/apiClient.js';
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import StatCard from '../components/StatCard.jsx';
+import MultiMetricTrendChart from '../components/MultiMetricTrendChart.jsx';
 import {
   BarChartIcon,
   ZapIcon,
@@ -134,11 +135,37 @@ export default function AnalyticsPage() {
   const bestAModel = anomaly.best_model || 'Random Forest';
   const aMetrics = anomaly.metrics?.find((m) => m.Model === bestAModel) || anomaly;
 
+  const FEATURE_NAMES = {
+    lag_1h: 'Lag 1h Electricity Consumed',
+    lag_6h: 'Lag 6h Electricity Consumed',
+    lag_12h: 'Lag 12h Electricity Consumed',
+    lag_24h: 'Lag 24h Daily Baseline',
+    lag_48h: 'Lag 48h Inertia',
+    lag_168h: 'Lag 168h (1-Week Cycle)',
+    roll_mean_6h: 'Rolling 6h Mean Power',
+    roll_mean_24h: 'Rolling 24h Mean Power',
+    roll_std_6h: 'Rolling 6h Volatility',
+    roll_std_24h: 'Rolling 24h Volatility',
+    ambient_temp_c: 'Ambient Air Temp (°C)',
+    chilled_water_temp_c: 'Chilled Water Supply (°C)',
+    server_inlet_temp_c: 'Rack Inlet Temp (°C)',
+    relative_humidity_pct: 'Relative Humidity (%)',
+    under_floor_pressure_pa: 'Plenum Pressure (Pa)',
+    it_load_kwh: 'IT Compute Equipment (kW)',
+    cooling_load_kwh: 'Cooling / CRAC Load (kW)',
+    midnight_energy_kwh: 'Midnight Base Demand',
+    weekend_energy_kwh: 'Weekend Demand Offset',
+  };
+
   const featureImportance = (forecast.feature_importance ?? [])
-    .map((item) => ({
-      feature: (item.feature ?? item.name ?? 'Unknown').replace(/_/g, ' '),
-      value: +(item.importance ?? item.value ?? 0),
-    }))
+    .map((item) => {
+      const raw = item.feature ?? item.name ?? 'Unknown';
+      const clean = FEATURE_NAMES[raw] || raw.replace(/_/g, ' ');
+      return {
+        feature: clean,
+        value: +(item.importance ?? item.value ?? 0),
+      };
+    })
     .sort((a, b) => b.value - a.value)
     .slice(0, 12);
 
@@ -252,11 +279,30 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      {/* ── Section 3: Anomaly Detection Metrics & Decision Matrix ─────── */}
+      {/* ── Section 3: Annual Multi-Metric Historical & Predictive Trends ── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between border-b border-[#14263f] pb-2 font-mono">
+          <div>
+            <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+              3. Annual Multi-Metric Historical & Predictive Trends
+            </h2>
+            <p className="text-[10px] text-slate-400 mt-0.5">
+              Long-range envelope curves, seasonal variance bands, 30-day forecast projections, and reference anchors
+            </p>
+          </div>
+          <span className="text-[10px] text-cyan-400 bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded font-mono">
+            365-DAY HORIZON
+          </span>
+        </div>
+
+        <MultiMetricTrendChart />
+      </div>
+
+      {/* ── Section 4: Anomaly Detection Metrics & Decision Matrix ─────── */}
       <div className="space-y-4">
         <div className="flex items-center justify-between border-b border-[#14263f] pb-2 font-mono">
           <h2 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
-            3. Plant Anomaly Detection & Reliability Diagnostics
+            4. Plant Anomaly Detection & Reliability Diagnostics
           </h2>
           <span className="text-[10px] text-slate-500">
             Random Forest Binary Classifier (Normal vs Failure)

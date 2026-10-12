@@ -1,5 +1,5 @@
 # ============================================================
-# OS / Editor
+# OS & Editor Clutter
 # ============================================================
 .DS_Store
 Thumbs.db
@@ -11,7 +11,7 @@ Desktop.ini
 *.tmp
 
 # ============================================================
-# Environment & Secrets
+# Environment Variables & Secrets (NEVER COMMIT REAL SECRETS)
 # ============================================================
 .env
 .env.*
@@ -21,9 +21,10 @@ Desktop.ini
 *.crt
 server.env
 server/*.env
+client/.env
 
 # ============================================================
-# Node.js / Frontend + Backend
+# Node.js / Dependencies & Build Artifacts
 # ============================================================
 node_modules/
 .npm/
@@ -41,7 +42,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ============================================================
-# Python Virtual Environments & Caches
+# Python Virtual Environments & Bytecode Caches
 # ============================================================
 venv/
 .venv/
@@ -58,25 +59,27 @@ __pycache__/
 .eggs/
 
 # ============================================================
-# Jupyter
+# Jupyter Notebook Checkpoints
 # ============================================================
 .ipynb_checkpoints/
 
 # ============================================================
-# ML Pipeline Generated Artifacts
-# Keep source datasets, notebooks, and result JSONs tracked.
-# Binary model artifacts (large) are excluded — re-generate
-# by running notebooks 01-08 before starting the ML service.
+# ML Model Binaries & Heavy Checkpoints (GitHub Safety: <50MB/100MB)
+# Excluded to prevent GitHub GH001 large-file push rejections
+# and repository bloat. Generate locally via notebooks 01-08.
 # ============================================================
 ml-pipeline/models/*.pkl
 ml-pipeline/models/*.h5
 ml-pipeline/models/*.keras
 ml-pipeline/models/*.joblib
 ml-pipeline/models/*.weights
-ml-pipeline/data/raw/
+ml-pipeline/models/*.pt
+ml-pipeline/models/*.pth
+ml-pipeline/models/*.onnx
+!ml-pipeline/models/.gitkeep
 
 # ============================================================
-# Docker / Local Runtime Data
+# Local Runtime Databases & Docker Volume Mounts
 # ============================================================
 mongodb_data/
 *.sqlite

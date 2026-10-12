@@ -27,11 +27,22 @@ export default function LoginPage() {
   const [controlModule, setControlModule] = useState('Energy Management & Forecasting');
   const [shiftAssignment, setShiftAssignment] = useState('Day Shift (06:00–14:00)');
   const [mfaCode, setMfaCode] = useState('749210');
-  const [remember, setRemember] = useState(true);
 
   // If already logged in, jump directly to control software
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
+  }
+
+  function handleQuickLogin() {
+    login({
+      email: 'operator@smartdc.internal',
+      operatorId: 'OP-8492 (Lead Dispatcher)',
+      facilityId: 'IOWA-HYPERSCALE-01',
+      accessLevel: 'L2-Operator',
+      controlModule: 'Energy Management & Forecasting',
+      shiftAssignment: 'Day Shift (06:00–14:00)',
+    });
+    navigate('/', { replace: true });
   }
 
   function handleSubmit(e) {
@@ -42,7 +53,6 @@ export default function LoginPage() {
     }
     setError('');
 
-    // Grant SCADA Session — pass persist flag so AuthContext uses the right storage
     login({
       email: email.trim(),
       operatorId: operatorId.trim() || 'ENG-GUEST',
@@ -50,7 +60,6 @@ export default function LoginPage() {
       accessLevel,
       controlModule,
       shiftAssignment,
-      persist: remember,
     });
 
     navigate('/', { replace: true });
@@ -209,28 +218,26 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
-                id="remember"
-                checked={remember}
-                onChange={e => setRemember(e.target.checked)}
-                className="w-4 h-4 rounded border-[#1a2d47] bg-[#0b162a] text-cyan-500 focus:ring-0 cursor-pointer"
-              />
-              <label htmlFor="remember" className="text-[11px] text-slate-400 cursor-pointer select-none">
-                Retain dispatch credentials for current station session
-              </label>
+            <div className="pt-2 space-y-2">
+              <button
+                type="submit"
+                className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-mono font-bold text-xs uppercase tracking-widest rounded-lg transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] active:scale-[0.99]"
+              >
+                Authenticate & Unlock Control System
+              </button>
+
+              <button
+                type="button"
+                onClick={handleQuickLogin}
+                className="w-full py-2.5 bg-[#0e223d] hover:bg-[#142e52] border border-cyan-500/40 text-cyan-300 font-mono font-bold text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
+              >
+                <ZapIcon className="w-3.5 h-3.5 text-cyan-400" />
+                <span>1-Click Quick Entry (Iowa-01 Lead Dispatcher)</span>
+              </button>
             </div>
 
-            <button
-              type="submit"
-              className="w-full mt-3 py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-mono font-bold text-xs uppercase tracking-widest rounded-lg transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] active:scale-[0.99]"
-            >
-              Authenticate & Unlock Control System
-            </button>
-
-            <p className="text-center text-[10px] text-slate-500 font-mono mt-3">
-              Default pre-filled credentials ready. Click "Authenticate" to enter.
+            <p className="text-center text-[10px] text-slate-400 font-mono mt-3">
+              Operator authentication required on each browser session to protect substation controls.
             </p>
           </form>
         </div>
