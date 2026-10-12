@@ -22,7 +22,11 @@ def predict_anomaly(features: dict) -> dict:
     row_df = pd.DataFrame([features])[ml.ANOMALY_FEATURE_COLS]
     scaled = ml.anomaly_scaler.transform(row_df)
     pred = ml.anomaly_model.predict(scaled)[0]
-    rf_prob = float(ml.anomaly_model.predict_proba(scaled)[0, 1])
+    probs = ml.anomaly_model.predict_proba(scaled)[0]
+    if len(probs) > 1:
+        rf_prob = float(probs[1])
+    else:
+        rf_prob = float(probs[0]) if getattr(ml.anomaly_model, "classes_", [0])[0] == 1 else 0.0
 
     # Physical SCADA Operational Risk Evaluation
     # 1. Substation Power Thresholds (Baseline 9,707.7 kW, Warning 9,950 kW, Trip 10,450 kW)

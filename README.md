@@ -196,11 +196,11 @@ cd SmartDC-Energy
 docker-compose up -d --build
 ```
 
-**Running Services:**
-- 🌐 **Operator HMI (Client)**: [http://localhost:5173](http://localhost:5173)
-- ⚙️ **Express Gateway API**: [http://localhost:4000](http://localhost:4000)
-- 🧠 **FastAPI Swagger Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- 🗄️ **MongoDB**: `localhost:27017`
+**Running Services & Endpoints:**
+- 🗄️ **MongoDB 6.0**: `localhost:27017` (Database & SOE Historian)
+- 🧠 **FastAPI ML Microservice**: [http://localhost:8000/docs](http://localhost:8000/docs) (Swagger UI & Inference Engine)
+- ⚙️ **Express Gateway API**: [http://localhost:4000](http://localhost:4000) (Security, Rate Limiting & Proxy)
+- 🌐 **Operator HMI (Client)**: [http://localhost:5173](http://localhost:5173) (SCADA Dashboard)
 
 To view logs or stop the cluster:
 ```bash
@@ -211,6 +211,11 @@ docker-compose down
 ---
 
 ### Method 2: Manual Local Setup (Without Docker)
+
+> [!IMPORTANT]
+> **Strict Startup Sequence & Dependency Chain**:  
+> **MongoDB (Port 27017) ➔ ML Microservice (Port 8000) ➔ Backend Gateway (Port 4000) ➔ React Client (Port 5173)**  
+> The Express server operates as an API Gateway that proxies requests to the ML microservice via HTTP (`axios`). Starting the Express backend before the ML microservice is online causes connection refusals (`ECONNREFUSED`) resulting in `502 ML service unavailable` errors when operators load the dashboard. Follow Steps 1 to 6 in exact sequential order across dedicated terminal windows.
 
 #### Step 1: Initialize Environment Templates
 ```bash
@@ -225,15 +230,16 @@ Because large binary files are excluded from Git to keep the repository lightwei
 python setup_models.py
 ```
 
-#### Step 3: Start the Backend Gateway (Port 4000)
+#### Step 3: Ensure MongoDB is Running (Port 27017)
+Ensure your local MongoDB daemon is running for the Sequence of Events (SOE) historian:
 ```bash
-cd server
-npm install
-npm test          # Runs automated test suite (6/6 passing)
-npm run dev       # Starts server on http://localhost:4000
+# Verify connection (or start service with 'mongod')
+mongosh --eval "db.runCommand({ ping: 1 })"
 ```
 
-#### Step 4: Start the ML Microservice (Port 8000)
+#### Step 4: Start the ML Microservice (Port 8000) — Terminal 1
+> **Must be started before the backend gateway** so prediction engines, scalers, and simulation replay buffers are initialized in memory.
+
 ```bash
 cd ml-service
 python -m venv venv
@@ -243,8 +249,19 @@ python -m venv venv
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
+Verify the microservice is operational by visiting [http://localhost:8000/docs](http://localhost:8000/docs).
 
-#### Step 5: Start the React Client (Port 5173)
+#### Step 5: Start the Backend Gateway (Port 4000) — Terminal 2
+Open a second terminal window:
+```bash
+cd server
+npm install
+npm test          # Runs automated test suite (6/6 passing)
+npm run dev       # Starts server on http://localhost:4000
+```
+
+#### Step 6: Start the React Client (Port 5173) — Terminal 3
+Open a third terminal window:
 ```bash
 cd client
 npm install

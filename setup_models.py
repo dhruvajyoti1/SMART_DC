@@ -137,7 +137,7 @@ def train_and_export():
         "hour_sin", "hour_cos", "month_sin", "month_cos", "is_weekend"
     ]
     X_a = df[anomaly_feature_cols]
-    y_a = (df["anomaly_flag"] == 1).astype(int)
+    y_a = (df["anomaly_flag"].astype(str).str.lower().isin(["failure", "1", "true"])).astype(int)
 
     X_train_a, X_test_a, y_train_a, y_test_a = train_test_split(
         X_a, y_a, test_size=0.2, random_state=SEED, stratify=y_a
