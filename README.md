@@ -432,30 +432,6 @@ Comprehensive technical details and runtime guides have been organized into the 
 
 ---
 
-## ⚠️ Known Limitations
-
-1. **Synthetic Dataset**: All data is generated, not from a real facility. Model metrics reflect clean synthetic decision boundaries and would be lower on noisy real-world sensor data.
-2. **Replayed Telemetry**: The "live" dashboard replays pre-computed test data chronologically — it does not ingest real-time sensor feeds via MQTT, Modbus, or OPC-UA.
-3. **HTTP Polling (Not WebSockets)**: The frontend polls the backend every 3 seconds via HTTP. A WebSocket or Server-Sent Events (SSE) architecture would reduce latency and overhead for true real-time applications.
-4. **Client-Side Auth Only**: The login gate stores `sessionStorage` flags. There is no server-side JWT validation, RBAC, or session management. Any user can bypass authentication by directly accessing API endpoints.
-5. **Single-Node Deployment**: The Docker Compose setup runs all services on a single machine. Production deployments would require container orchestration (Kubernetes), horizontal scaling, and a managed database (MongoDB Atlas).
-6. **No Model Versioning**: Trained model artifacts are not tracked with MLflow, DVC, or similar tools. Retraining overwrites existing `.pkl` files.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] **Real-Time Ingestion**: MQTT/Modbus connector for live sensor data instead of replayed test data
-- [ ] **WebSocket Streaming**: Replace HTTP polling with WebSocket or SSE for sub-second telemetry updates
-- [ ] **Server-Side Authentication**: JWT-based auth with role-based access control (RBAC)
-- [ ] **Cloud Database**: MongoDB Atlas integration with connection pooling
-- [ ] **ML Model Versioning**: MLflow or DVC for experiment tracking and model registry
-- [ ] **CI/CD Pipeline**: GitHub Actions for automated testing, linting, and Docker image builds
-- [ ] **Kubernetes Deployment**: Helm charts for production-grade orchestration
-- [ ] **Historical Data Replay**: Configurable date-range replay instead of sequential-only tick stream
-
----
-
 ## 📜 License & Acknowledgments
 
 - **License**: Released under the [MIT License](LICENSE).
