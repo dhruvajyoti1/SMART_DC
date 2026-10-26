@@ -32,8 +32,6 @@
 - [Demo Operator Login](#-demo-operator-login)
 - [Testing & Verification](#-testing--verification)
 - [Technical Documentation & Guides](#-technical-documentation--guides)
-- [Known Limitations](#-known-limitations)
-- [Roadmap](#-roadmap)
 - [License & Acknowledgments](#-license--acknowledgments)
 <!-- - [Team & Credits](#-team--credits) -->
 
